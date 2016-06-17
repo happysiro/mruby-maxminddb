@@ -1,0 +1,6 @@
+name: mruby-maxminddb
+description: Maxminddb class
+author: Kenichi Mitsugi
+website: https://github.com/happysiro/mruby-maxminddb
+protocol: git
+repository: https://github.com/happysiro/mruby-maxminddb.git
