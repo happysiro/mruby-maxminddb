@@ -1,17 +1,22 @@
 ##
-## Maxminddb Test
+## MaxMindDB Test
 ##
 
-assert("Maxminddb#hello") do
-  t = Maxminddb.new "hello"
-  assert_equal("hello", t.hello)
+MaxMindDbDat = "/tmp/GeoIP/GeoLite2-City.mmdb"
+IPAddr = '8.8.8.8'
+
+assert("MaxMindDB#new") do
+  maxminddb = MaxMindDB.new MaxMindDbDat
+  assert_not_equal(nil, maxminddb)
 end
 
-assert("Maxminddb#bye") do
-  t = Maxminddb.new "hello"
-  assert_equal("hello bye", t.bye)
+assert("MaxMindDB#lookup_string") do
+  maxminddb = MaxMindDB.new MaxMindDbDat
+  maxminddb.lookup_string IPAddr
 end
 
-assert("Maxminddb.hi") do
-  assert_equal("hi!!", Maxminddb.hi)
+assert("MaxMindDB#country_code") do
+  maxminddb = MaxMindDB.new MaxMindDbDat
+  maxminddb.lookup_string IPAddr
+  assert_equal("US", maxminddb.country_code)
 end
