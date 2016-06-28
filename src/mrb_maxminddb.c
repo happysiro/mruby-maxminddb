@@ -25,8 +25,15 @@ typedef struct {
   char *str;
 } mrb_maxminddb_data;
 
+
+static void mrb_maxminddb_free(mrb_state *mrb, void *p)
+{
+  mrb_maxminddb_data *data = p;
+  MMDB_close(&(data->mmdb));
+}
+
 static const struct mrb_data_type mrb_maxminddb_data_type = {
-  "mrb_maxminddb_data", mrb_free,
+  "mrb_maxminddb_data", mrb_maxminddb_free,
 };
 
 static mrb_value mrb_maxminddb_init(mrb_state *mrb, mrb_value self)
@@ -36,7 +43,6 @@ static mrb_value mrb_maxminddb_init(mrb_state *mrb, mrb_value self)
 
   data = (mrb_maxminddb_data *)DATA_PTR(self);
 
-
   if (data) {
     mrb_free(mrb, data);
   }
@@ -45,11 +51,10 @@ static mrb_value mrb_maxminddb_init(mrb_state *mrb, mrb_value self)
   DATA_PTR(self) = NULL;
 
   mrb_get_args(mrb, "z", &db);
-  data = (mrb_maxminddb_data *)mrb_malloc(mrb, sizeof(mrb_maxminddb_data));
 
+  data = (mrb_maxminddb_data *)mrb_malloc(mrb, sizeof(mrb_maxminddb_data));
   data->mmdb_lookup_error = -1;
   data->gai_error = -1;
-
   data->db = db;
 
   int status = MMDB_open(data->db, MMDB_MODE_MMAP, &(data->mmdb));
@@ -87,30 +92,118 @@ static mrb_value mrb_maxminddb_lookup_string (mrb_state *mrb, mrb_value self)
 static mrb_value mrb_maxminddb_country_code (mrb_state *mrb, mrb_value self)
 {
   mrb_maxminddb_data *data = DATA_PTR(self);
+  const char *path[3] = { "country", "iso_code", NULL };
 
-  const char *path[3] = {
-          "country",
-          "iso_code",
-          NULL
-  };
-
-  if (0 != data->gai_error) {
-    mrb_raise(mrb, E_RUNTIME_ERROR, "Gai Error");
-    mrb_raise(mrb, E_RUNTIME_ERROR, gai_strerror(data->gai_error));
-  }
-
-  if (MMDB_SUCCESS != data->mmdb_lookup_error) {
-    mrb_raise(mrb, E_RUNTIME_ERROR, "Lookup Error");
-  }
+  if (0 != data->gai_error && MMDB_SUCCESS != data->mmdb_lookup_error)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "call lookup_string");
 
   MMDB_entry_data_s entry_data;
-  MMDB_lookup_result_s result = data->lookup_result_s;
+  int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+  return mrb_str_new_cstr(mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+}
 
-  int status = MMDB_aget_value(&result.entry, &entry_data, path);
+static mrb_value mrb_maxminddb_region (mrb_state *mrb, mrb_value self)
+{
+  mrb_maxminddb_data *data = DATA_PTR(self);
+  const char *path[4] = { "subdivisions", "0", "iso_code", NULL };
 
-  char *string = mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size);
+  if (0 != data->gai_error && MMDB_SUCCESS != data->mmdb_lookup_error)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "call lookup_string");
 
-  return mrb_str_new_cstr(mrb, string);
+  MMDB_entry_data_s entry_data;
+  int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+  return mrb_str_new_cstr(mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+}
+
+static mrb_value mrb_maxminddb_region_name (mrb_state *mrb, mrb_value self)
+{
+  mrb_maxminddb_data *data = DATA_PTR(self);
+  const char *path[5] = { "subdivisions", "0", "names", "en", NULL };
+
+  if (0 != data->gai_error && MMDB_SUCCESS != data->mmdb_lookup_error)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "call lookup_string");
+
+  MMDB_entry_data_s entry_data;
+  int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+  return mrb_str_new_cstr(mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+}
+
+static mrb_value mrb_maxminddb_city (mrb_state *mrb, mrb_value self)
+{
+  mrb_maxminddb_data *data = DATA_PTR(self);
+  const char *path[4] = { "city", "names", "en", NULL };
+
+  if (0 != data->gai_error && MMDB_SUCCESS != data->mmdb_lookup_error)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "call lookup_string");
+
+  MMDB_entry_data_s entry_data;
+  int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+  return mrb_str_new_cstr(mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+}
+
+static mrb_value mrb_maxminddb_postal_code (mrb_state *mrb, mrb_value self)
+{
+  mrb_maxminddb_data *data = DATA_PTR(self);
+  const char *path[3] = { "postal", "code", NULL };
+
+  if (0 != data->gai_error && MMDB_SUCCESS != data->mmdb_lookup_error)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "call lookup_string");
+
+  MMDB_entry_data_s entry_data;
+  int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+  return mrb_str_new_cstr(mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+}
+
+static mrb_value mrb_maxminddb_latitude (mrb_state *mrb, mrb_value self)
+{
+  mrb_maxminddb_data *data = DATA_PTR(self);
+  const char *path[3] = { "location", "latitude", NULL };
+
+  if (0 != data->gai_error && MMDB_SUCCESS != data->mmdb_lookup_error)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "call lookup_string");
+
+  MMDB_entry_data_s entry_data;
+  int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+  return mrb_float_value(mrb, entry_data.double_value);
+}
+
+static mrb_value mrb_maxminddb_longitude(mrb_state *mrb, mrb_value self)
+{
+  mrb_maxminddb_data *data = DATA_PTR(self);
+  const char *path[3] = { "location", "longitude", NULL };
+
+  if (0 != data->gai_error && MMDB_SUCCESS != data->mmdb_lookup_error)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "call lookup_string");
+
+  MMDB_entry_data_s entry_data;
+  int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+  return mrb_float_value(mrb, entry_data.double_value);
+}
+
+static mrb_value mrb_maxminddb_metro_code(mrb_state *mrb, mrb_value self)
+{
+  mrb_maxminddb_data *data = DATA_PTR(self);
+  const char *path[3] = { "location", "metro_code", NULL };
+
+  if (0 != data->gai_error && MMDB_SUCCESS != data->mmdb_lookup_error)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "call lookup_string");
+
+  MMDB_entry_data_s entry_data;
+  int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+  return mrb_fixnum_value(entry_data.uint16);
+}
+
+static mrb_value mrb_maxminddb_time_zone(mrb_state *mrb, mrb_value self)
+{
+  mrb_maxminddb_data *data = DATA_PTR(self);
+  const char *path[3] = { "location", "time_zone", NULL };
+
+  if (0 != data->gai_error && MMDB_SUCCESS != data->mmdb_lookup_error)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "call lookup_string");
+
+  MMDB_entry_data_s entry_data;
+  int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+  return mrb_str_new_cstr(mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
 }
 
 void mrb_mruby_maxminddb_gem_init(mrb_state *mrb)
@@ -120,6 +213,14 @@ void mrb_mruby_maxminddb_gem_init(mrb_state *mrb)
     mrb_define_method(mrb, maxminddb, "initialize", mrb_maxminddb_init, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, maxminddb, "lookup_string", mrb_maxminddb_lookup_string, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, maxminddb, "country_code", mrb_maxminddb_country_code, MRB_ARGS_NONE());
+    mrb_define_method(mrb, maxminddb, "region", mrb_maxminddb_region, MRB_ARGS_NONE());
+    mrb_define_method(mrb, maxminddb, "region_name", mrb_maxminddb_region_name, MRB_ARGS_NONE());
+    mrb_define_method(mrb, maxminddb, "city", mrb_maxminddb_city, MRB_ARGS_NONE());
+    mrb_define_method(mrb, maxminddb, "postal_code", mrb_maxminddb_postal_code, MRB_ARGS_NONE());
+    mrb_define_method(mrb, maxminddb, "latitude", mrb_maxminddb_latitude, MRB_ARGS_NONE());
+    mrb_define_method(mrb, maxminddb, "longitude", mrb_maxminddb_longitude, MRB_ARGS_NONE());
+    mrb_define_method(mrb, maxminddb, "metro_code", mrb_maxminddb_metro_code, MRB_ARGS_NONE());
+    mrb_define_method(mrb, maxminddb, "time_zone", mrb_maxminddb_time_zone, MRB_ARGS_NONE());
     DONE;
 }
 
