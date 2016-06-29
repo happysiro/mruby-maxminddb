@@ -15,6 +15,6 @@ before_script:
   - cp -fp ../mruby-maxminddb/.travis_build_config.rb build_config.rb
   - sudo wget -N http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz
   - sudo gunzip GeoLite2-City.mmdb.gz
-  - sudo mv GeoLiteCity.dat /tmp/
+  - sudo mv GeoLite2-City.mmdb /tmp/
 script:
   - make all test
