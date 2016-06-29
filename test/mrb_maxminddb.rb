@@ -2,7 +2,7 @@
 ## MaxMindDB Test
 ##
 
-MaxMindDbDat = "/tmp/GeoIP/GeoLite2-City.mmdb"
+MaxMindDbDat = "/tmp/GeoLite2-City.mmdb"
 IPAddr = '8.8.8.8'
 
 assert("MaxMindDB#new") do
