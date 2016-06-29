@@ -3,4 +3,5 @@ MRuby::Build.new do |conf|
   conf.gembox 'default'
   conf.gem '../mruby-maxminddb'
   conf.enable_test
+  conf.linker.libraries << 'maxminddb'
 end
