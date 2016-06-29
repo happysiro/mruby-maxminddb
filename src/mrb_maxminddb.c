@@ -99,6 +99,10 @@ static mrb_value mrb_maxminddb_country_code (mrb_state *mrb, mrb_value self)
 
   MMDB_entry_data_s entry_data;
   int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+
   return mrb_str_new_cstr(mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
 }
 
@@ -112,6 +116,10 @@ static mrb_value mrb_maxminddb_region (mrb_state *mrb, mrb_value self)
 
   MMDB_entry_data_s entry_data;
   int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+
   return mrb_str_new_cstr(mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
 }
 
@@ -125,6 +133,10 @@ static mrb_value mrb_maxminddb_region_name (mrb_state *mrb, mrb_value self)
 
   MMDB_entry_data_s entry_data;
   int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+
   return mrb_str_new_cstr(mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
 }
 
@@ -138,6 +150,10 @@ static mrb_value mrb_maxminddb_city (mrb_state *mrb, mrb_value self)
 
   MMDB_entry_data_s entry_data;
   int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+
   return mrb_str_new_cstr(mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
 }
 
@@ -151,6 +167,10 @@ static mrb_value mrb_maxminddb_postal_code (mrb_state *mrb, mrb_value self)
 
   MMDB_entry_data_s entry_data;
   int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+
   return mrb_str_new_cstr(mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
 }
 
@@ -164,6 +184,10 @@ static mrb_value mrb_maxminddb_latitude (mrb_state *mrb, mrb_value self)
 
   MMDB_entry_data_s entry_data;
   int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+
   return mrb_float_value(mrb, entry_data.double_value);
 }
 
@@ -177,6 +201,10 @@ static mrb_value mrb_maxminddb_longitude(mrb_state *mrb, mrb_value self)
 
   MMDB_entry_data_s entry_data;
   int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+
   return mrb_float_value(mrb, entry_data.double_value);
 }
 
@@ -190,6 +218,10 @@ static mrb_value mrb_maxminddb_metro_code(mrb_state *mrb, mrb_value self)
 
   MMDB_entry_data_s entry_data;
   int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+
   return mrb_fixnum_value(entry_data.uint16);
 }
 
@@ -203,6 +235,10 @@ static mrb_value mrb_maxminddb_time_zone(mrb_state *mrb, mrb_value self)
 
   MMDB_entry_data_s entry_data;
   int status = MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+
   return mrb_str_new_cstr(mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
 }
 
