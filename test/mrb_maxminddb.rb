@@ -2,7 +2,7 @@
 ## MaxMindDB Test
 ##
 
-MaxMindDbDat = "/tmp/GeoLite2-City.mmdb"
+MaxMindDbDat = File.expand_path("../mruby-maxminddb/test/fixtures/GeoLite2-City.mmdb")
 
 Data1 = {
   :ip_addr      => "8.8.8.8",
