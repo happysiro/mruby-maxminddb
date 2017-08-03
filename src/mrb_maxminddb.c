@@ -15,6 +15,8 @@
 
 #define DONE mrb_gc_arena_restore(mrb, 0);
 
+int maxminddb_status;
+
 typedef struct {
   MMDB_s mmdb;
   MMDB_lookup_result_s lookup_result_s;
@@ -54,9 +56,9 @@ static mrb_value mrb_maxminddb_init(mrb_state *mrb, mrb_value self) {
   data->gai_error = -1;
   data->db = db;
 
-  int status = MMDB_open(data->db, MMDB_MODE_MMAP, &(data->mmdb));
+  maxminddb_status = MMDB_open(data->db, MMDB_MODE_MMAP, &(data->mmdb));
 
-  if (MMDB_SUCCESS != status) {
+  if (MMDB_SUCCESS != maxminddb_status) {
     mrb_raise(mrb, E_RUNTIME_ERROR, "Open Error");
   }
 
@@ -116,8 +118,13 @@ static mrb_value mrb_maxminddb_region(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
-  if (MMDB_SUCCESS != status)
-    return mrb_nil_value();
+  if (MMDB_SUCCESS != status) {
+    if (MMDB_SUCCESS == maxminddb_status) {
+      return mrb_nil_value();
+    } else {
+      mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+    }
+  }
 
   return mrb_str_new_cstr(
       mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
@@ -134,8 +141,13 @@ static mrb_value mrb_maxminddb_region_name(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
-  if (MMDB_SUCCESS != status)
-    return mrb_nil_value();
+  if (MMDB_SUCCESS != status) {
+    if (MMDB_SUCCESS == maxminddb_status) {
+      return mrb_nil_value();
+    } else {
+      mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+    }
+  }
 
   return mrb_str_new_cstr(
       mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
@@ -152,8 +164,13 @@ static mrb_value mrb_maxminddb_city(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
-  if (MMDB_SUCCESS != status)
-    return mrb_nil_value();
+  if (MMDB_SUCCESS != status) {
+    if (MMDB_SUCCESS == maxminddb_status) {
+      return mrb_nil_value();
+    } else {
+      mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+    }
+  }
 
   return mrb_str_new_cstr(
       mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
@@ -170,8 +187,13 @@ static mrb_value mrb_maxminddb_postal_code(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
-  if (MMDB_SUCCESS != status)
-    return mrb_nil_value();
+  if (MMDB_SUCCESS != status) {
+    if (MMDB_SUCCESS == maxminddb_status) {
+      return mrb_nil_value();
+    } else {
+      mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+    }
+  }
 
   return mrb_str_new_cstr(
       mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
@@ -222,8 +244,13 @@ static mrb_value mrb_maxminddb_metro_code(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
-  if (MMDB_SUCCESS != status)
-    return mrb_nil_value();
+  if (MMDB_SUCCESS != status) {
+    if (MMDB_SUCCESS == maxminddb_status) {
+      return mrb_nil_value();
+    } else {
+      mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+    }
+  }
 
   return mrb_fixnum_value(entry_data.uint16);
 }
@@ -239,8 +266,13 @@ static mrb_value mrb_maxminddb_time_zone(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
-  if (MMDB_SUCCESS != status)
-    return mrb_nil_value();
+  if (MMDB_SUCCESS != status) {
+    if (MMDB_SUCCESS == maxminddb_status) {
+      return mrb_nil_value();
+    } else {
+      mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
+    }
+  }
 
   return mrb_str_new_cstr(
       mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
