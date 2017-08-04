@@ -116,8 +116,11 @@ static mrb_value mrb_maxminddb_region(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
-  if (MMDB_SUCCESS != status)
+  if (MMDB_LOOKUP_PATH_DOES_NOT_MATCH_DATA_ERROR == status)
     return mrb_nil_value();
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
   return mrb_str_new_cstr(
       mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
@@ -134,8 +137,11 @@ static mrb_value mrb_maxminddb_region_name(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
-  if (MMDB_SUCCESS != status)
+  if (MMDB_LOOKUP_PATH_DOES_NOT_MATCH_DATA_ERROR == status)
     return mrb_nil_value();
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
   return mrb_str_new_cstr(
       mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
@@ -152,8 +158,11 @@ static mrb_value mrb_maxminddb_city(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
-  if (MMDB_SUCCESS != status)
+  if (MMDB_LOOKUP_PATH_DOES_NOT_MATCH_DATA_ERROR == status)
     return mrb_nil_value();
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
   return mrb_str_new_cstr(
       mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
@@ -170,8 +179,11 @@ static mrb_value mrb_maxminddb_postal_code(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
-  if (MMDB_SUCCESS != status)
+  if (MMDB_LOOKUP_PATH_DOES_NOT_MATCH_DATA_ERROR == status)
     return mrb_nil_value();
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
   return mrb_str_new_cstr(
       mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
@@ -222,8 +234,11 @@ static mrb_value mrb_maxminddb_metro_code(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
-  if (MMDB_SUCCESS != status)
+  if (MMDB_LOOKUP_PATH_DOES_NOT_MATCH_DATA_ERROR == status)
     return mrb_nil_value();
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
   return mrb_fixnum_value(entry_data.uint16);
 }
@@ -239,8 +254,11 @@ static mrb_value mrb_maxminddb_time_zone(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
-  if (MMDB_SUCCESS != status)
+  if (MMDB_LOOKUP_PATH_DOES_NOT_MATCH_DATA_ERROR == status)
     return mrb_nil_value();
+
+  if (MMDB_SUCCESS != status)
+    mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
   return mrb_str_new_cstr(
       mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
