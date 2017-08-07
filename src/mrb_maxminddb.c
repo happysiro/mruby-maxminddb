@@ -98,6 +98,9 @@ static mrb_value mrb_maxminddb_country_code(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
+  if (MMDB_LOOKUP_PATH_DOES_NOT_MATCH_DATA_ERROR == status)
+    return mrb_nil_value();
+
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
@@ -200,6 +203,9 @@ static mrb_value mrb_maxminddb_latitude(mrb_state *mrb, mrb_value self) {
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
 
+  if (MMDB_LOOKUP_PATH_DOES_NOT_MATCH_DATA_ERROR == status)
+    return mrb_nil_value();
+
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
@@ -216,6 +222,9 @@ static mrb_value mrb_maxminddb_longitude(mrb_state *mrb, mrb_value self) {
   MMDB_entry_data_s entry_data;
   int status =
       MMDB_aget_value(&(data->lookup_result_s.entry), &entry_data, path);
+
+  if (MMDB_LOOKUP_PATH_DOES_NOT_MATCH_DATA_ERROR == status)
+    return mrb_nil_value();
 
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
