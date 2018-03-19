@@ -107,8 +107,8 @@ static mrb_value mrb_maxminddb_country_code(mrb_state *mrb, mrb_value self) {
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
-  return mrb_str_new_cstr(
-      mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+  return mrb_str_new(
+      mrb, (char *)entry_data.utf8_string, entry_data.data_size);
 }
 
 static mrb_value mrb_maxminddb_region(mrb_state *mrb, mrb_value self) {
@@ -128,8 +128,8 @@ static mrb_value mrb_maxminddb_region(mrb_state *mrb, mrb_value self) {
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
-  return mrb_str_new_cstr(
-      mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+  return mrb_str_new(
+      mrb, (char *)entry_data.utf8_string, entry_data.data_size);
 }
 
 static mrb_value mrb_maxminddb_region_name(mrb_state *mrb, mrb_value self) {
@@ -149,8 +149,8 @@ static mrb_value mrb_maxminddb_region_name(mrb_state *mrb, mrb_value self) {
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
-  return mrb_str_new_cstr(
-      mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+  return mrb_str_new(
+      mrb, (char *)entry_data.utf8_string, entry_data.data_size);
 }
 
 static mrb_value mrb_maxminddb_city(mrb_state *mrb, mrb_value self) {
@@ -170,8 +170,8 @@ static mrb_value mrb_maxminddb_city(mrb_state *mrb, mrb_value self) {
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
-  return mrb_str_new_cstr(
-      mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+  return mrb_str_new(
+      mrb, (char *)entry_data.utf8_string, entry_data.data_size);
 }
 
 static mrb_value mrb_maxminddb_postal_code(mrb_state *mrb, mrb_value self) {
@@ -191,8 +191,8 @@ static mrb_value mrb_maxminddb_postal_code(mrb_state *mrb, mrb_value self) {
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
-  return mrb_str_new_cstr(
-      mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+  return mrb_str_new(
+      mrb, (char *)entry_data.utf8_string, entry_data.data_size);
 }
 
 static mrb_value mrb_maxminddb_latitude(mrb_state *mrb, mrb_value self) {
@@ -272,8 +272,8 @@ static mrb_value mrb_maxminddb_time_zone(mrb_state *mrb, mrb_value self) {
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
-  return mrb_str_new_cstr(
-      mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+  return mrb_str_new(
+      mrb, (char *)entry_data.utf8_string, entry_data.data_size);
 }
 
 void mrb_mruby_maxminddb_gem_init(mrb_state *mrb) {
