@@ -11,4 +11,6 @@ MRuby::Gem::Specification.new('mruby-maxminddb') do |spec|
 
   sh "mkdir -p #{File.dirname maxminddb_ci_path}"
   sh "gzip -cd #{maxminddb_origin_path}.gz > #{maxminddb_ci_path}" unless File.exist?(maxminddb_ci_path)
+
+  linker.libraries << 'maxminddb'
 end
