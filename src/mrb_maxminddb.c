@@ -29,6 +29,7 @@ typedef struct {
 static void mrb_maxminddb_free(mrb_state *mrb, void *p) {
   mrb_maxminddb_data *data = p;
   MMDB_close(&(data->mmdb));
+  mrb_free(mrb, p);
 }
 
 static const struct mrb_data_type mrb_maxminddb_data_type = {
@@ -58,6 +59,7 @@ static mrb_value mrb_maxminddb_init(mrb_state *mrb, mrb_value self) {
   int status = MMDB_open(data->db, MMDB_MODE_MMAP, &(data->mmdb));
 
   if (MMDB_SUCCESS != status) {
+    mrb_free(mrb, data);
     mrb_raise(mrb, E_RUNTIME_ERROR, "Open Error");
   }
 
