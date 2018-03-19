@@ -9,10 +9,8 @@ install:
   - sudo apt-get -qq install rake bison git gperf
   - sudo apt-get install -y libmaxminddb0 libmaxminddb-dev mmdb-bin
 before_script:
-  - gzip -cd test/fixtures/GeoLite2-City.mmdb.gz > test/fixtures/GeoLite2-City.mmdb
-  - cd ../
   - git clone https://github.com/mruby/mruby.git
+  - cp -fp .travis_build_config.rb mruby/build_config.rb
   - cd mruby
-  - cp -fp ../mruby-maxminddb/.travis_build_config.rb build_config.rb
 script:
   - make all test
