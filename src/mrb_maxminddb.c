@@ -10,6 +10,7 @@
 #include "maxminddb-compat-util.h"
 
 #include "mruby.h"
+#include "mruby/class.h"
 #include "mruby/data.h"
 #include "mrb_maxminddb.h"
 
@@ -276,6 +277,7 @@ static mrb_value mrb_maxminddb_time_zone(mrb_state *mrb, mrb_value self) {
 void mrb_mruby_maxminddb_gem_init(mrb_state *mrb) {
   struct RClass *maxminddb;
   maxminddb = mrb_define_class(mrb, "MaxMindDB", mrb->object_class);
+  MRB_SET_INSTANCE_TT(maxminddb, MRB_TT_DATA);
   mrb_define_method(mrb, maxminddb, "initialize", mrb_maxminddb_init,
                     MRB_ARGS_REQ(1));
   mrb_define_method(mrb, maxminddb, "lookup_string",
