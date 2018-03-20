@@ -10,6 +10,7 @@
 #include "maxminddb-compat-util.h"
 
 #include "mruby.h"
+#include "mruby/class.h"
 #include "mruby/data.h"
 #include "mrb_maxminddb.h"
 
@@ -28,6 +29,7 @@ typedef struct {
 static void mrb_maxminddb_free(mrb_state *mrb, void *p) {
   mrb_maxminddb_data *data = p;
   MMDB_close(&(data->mmdb));
+  mrb_free(mrb, p);
 }
 
 static const struct mrb_data_type mrb_maxminddb_data_type = {
@@ -57,6 +59,7 @@ static mrb_value mrb_maxminddb_init(mrb_state *mrb, mrb_value self) {
   int status = MMDB_open(data->db, MMDB_MODE_MMAP, &(data->mmdb));
 
   if (MMDB_SUCCESS != status) {
+    mrb_free(mrb, data);
     mrb_raise(mrb, E_RUNTIME_ERROR, "Open Error");
   }
 
@@ -104,8 +107,8 @@ static mrb_value mrb_maxminddb_country_code(mrb_state *mrb, mrb_value self) {
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
-  return mrb_str_new_cstr(
-      mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+  return mrb_str_new(
+      mrb, (char *)entry_data.utf8_string, entry_data.data_size);
 }
 
 static mrb_value mrb_maxminddb_region(mrb_state *mrb, mrb_value self) {
@@ -125,8 +128,8 @@ static mrb_value mrb_maxminddb_region(mrb_state *mrb, mrb_value self) {
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
-  return mrb_str_new_cstr(
-      mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+  return mrb_str_new(
+      mrb, (char *)entry_data.utf8_string, entry_data.data_size);
 }
 
 static mrb_value mrb_maxminddb_region_name(mrb_state *mrb, mrb_value self) {
@@ -146,8 +149,8 @@ static mrb_value mrb_maxminddb_region_name(mrb_state *mrb, mrb_value self) {
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
-  return mrb_str_new_cstr(
-      mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+  return mrb_str_new(
+      mrb, (char *)entry_data.utf8_string, entry_data.data_size);
 }
 
 static mrb_value mrb_maxminddb_city(mrb_state *mrb, mrb_value self) {
@@ -167,8 +170,8 @@ static mrb_value mrb_maxminddb_city(mrb_state *mrb, mrb_value self) {
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
-  return mrb_str_new_cstr(
-      mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+  return mrb_str_new(
+      mrb, (char *)entry_data.utf8_string, entry_data.data_size);
 }
 
 static mrb_value mrb_maxminddb_postal_code(mrb_state *mrb, mrb_value self) {
@@ -188,8 +191,8 @@ static mrb_value mrb_maxminddb_postal_code(mrb_state *mrb, mrb_value self) {
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
-  return mrb_str_new_cstr(
-      mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+  return mrb_str_new(
+      mrb, (char *)entry_data.utf8_string, entry_data.data_size);
 }
 
 static mrb_value mrb_maxminddb_latitude(mrb_state *mrb, mrb_value self) {
@@ -269,13 +272,14 @@ static mrb_value mrb_maxminddb_time_zone(mrb_state *mrb, mrb_value self) {
   if (MMDB_SUCCESS != status)
     mrb_raise(mrb, E_RUNTIME_ERROR, "MMDB_aget_value error");
 
-  return mrb_str_new_cstr(
-      mrb, mmdb_strndup((char *)entry_data.utf8_string, entry_data.data_size));
+  return mrb_str_new(
+      mrb, (char *)entry_data.utf8_string, entry_data.data_size);
 }
 
 void mrb_mruby_maxminddb_gem_init(mrb_state *mrb) {
   struct RClass *maxminddb;
   maxminddb = mrb_define_class(mrb, "MaxMindDB", mrb->object_class);
+  MRB_SET_INSTANCE_TT(maxminddb, MRB_TT_DATA);
   mrb_define_method(mrb, maxminddb, "initialize", mrb_maxminddb_init,
                     MRB_ARGS_REQ(1));
   mrb_define_method(mrb, maxminddb, "lookup_string",
